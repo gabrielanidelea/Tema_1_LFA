@@ -5,13 +5,13 @@
 #include <vector>
 #include <stack>
 using namespace std;
-ifstream fin("mealy.in");
+ifstream fin("MEALY.in");
 
 int nr_noduri; //cardinalul starilor
 int nr_tranzitii; //nr de tranzitii
 int stare_initiala;
-int f; //nr starilor finale
-int* F; //adresa inceputului de vector pentru starile finale
+int nr_stari_finale; //nr starilor finale
+int* Finale; //adresa inceputului de vector pentru starile finale
 int nr_stringuri; //nr cuvinte
 int sc; //stare curenta
 
@@ -74,10 +74,10 @@ void citire()
         tr.push_back(G); // salvam in vectorul tr: starea 1, starea 2, simbolul si ce afiseaza
     }
     fin >> stare_initiala;
-    fin >> f;//cardinalul starilor finale
-    F = new int[f];
-    for (int i = 0; i < f; i++)
-        fin >> F[i]; //citire stari finale
+    fin >> nr_stari_finale;//cardinalul starilor finale
+    Finale = new int[nr_stari_finale];
+    for (int i = 0; i < nr_stari_finale; i++)
+        fin >> Finale[i]; //citire stari finale
     fin >> nr_stringuri;
 
 }
@@ -85,9 +85,9 @@ void citire()
 bool verificare(string cuvant)
 {
     sc = stare_initiala; // plecam cu sc din starea initiala, citita din fisier
-    for (int i = 0; i < f; i++)
+    for (int i = 0; i < nr_stari_finale; i++)
     {
-        if (sc == F[i]) // daca sc se regaseste printe elementele vectorului de stari finale, atunci returnam 1
+        if (sc == Finale[i]) // daca sc se regaseste printe elementele vectorului de stari finale, atunci returnam 1
             return 1;
     }
 
@@ -96,12 +96,12 @@ bool verificare(string cuvant)
     for (unsigned int i = 0; i < cuvant.length(); i++) // parcurgem literele cuvantului
     {
 
-        sc = trecere(sc, cuvant[i]); // mutam starea in care ajungem parcurgand urmatoarea litera in variabila sc
+        sc = trecere(sc, cuvant[i]); // mutam in variabila sc starea in care ajungem dupa apliarea functiei trecere
         if (sc == -1) // daca nu ajungem nicaieri, sc va avea valoarea -1, iar functia verificare va returna 0
             return 0;
     }
-    for (int i = 0; i < f; i++)// parcurgem starile finale si verificam daca sc se gaseste printre ele
-        if (sc == F[i])
+    for (int i = 0; i < nr_stari_finale; i++)// parcurgem starile finale si verificam daca sc se gaseste printre ele
+        if (sc == Finale[i])
             return 1;// daca se gaseste, returnam 1
     return 0;// pentru orice alt caz(nefavorabil) returnam 0
 
@@ -112,7 +112,7 @@ int main()
 
     citire();
     string w;
-    while (fin>>w) //citim cate un cuvant din fisier
+    while (fin >> w) //citim cate un cuvant din fisier
     {
         if (verificare(w) == 1)
         {
