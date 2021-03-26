@@ -5,7 +5,7 @@
 #include <vector>
 #include <stack>
 using namespace std;
-ifstream fin("MEALY.in");
+ifstream fin("mealy.in");
 
 int nr_noduri; //cardinalul starilor
 int nr_tranzitii; //nr de tranzitii
@@ -17,10 +17,10 @@ int sc; //stare curenta
 
 struct tranzitie
 {
-    int a; //starea de la care se porneste
-    int b; //starea in care se ajunge
-    char c; //cu ce simbol tranzitionam
-    int d; //int-ul afisat de mealy
+    int nod_start; //starea de la care se porneste
+    int nod_end; //starea in care se ajunge
+    char simbol; //cu ce simbol tranzitionam
+    int output; //int-ul afisat de mealy
 
 } G;
 
@@ -50,15 +50,15 @@ void afis1(vector<int> st) //afisarea output-urilor specifice Mealy
 
 }
 
-int trecere(int curenta, char c)
+int trecere(int curenta, char simbol)
 {
 
     for (int i = 0; i < nr_tranzitii; i++)
-        if ((tr[i].a == curenta) && (tr[i].c == c)) //daca avem o stare care duce cu un simbol din alfabet citit intr-o alta stare
+        if ((tr[i].nod_start == curenta) && (tr[i].simbol == simbol)) //daca avem o stare care duce cu un simbol din alfabet citit intr-o alta stare
         {
-            st.push_back(tr[i].d);//, atunci salvam in vectorul st int-ul pe care dorim sa-l afisam ulterior
+            st.push_back(tr[i].output);//, atunci salvam in vectorul st int-ul pe care dorim sa-l afisam ulterior
             traseu.push_back(curenta); // salvam in vectorul traseu starea curenta
-            return tr[i].b; // returnam nodul in care am ajuns
+            return tr[i].nod_end; // returnam nodul in care am ajuns
         }
 
     return -1; // daca nu putem ajunge nicaieri, returnam -1
@@ -70,7 +70,7 @@ void citire()
     fin >> nr_tranzitii;
     for (int i = 0; i < nr_tranzitii; i++)
     {
-        fin >> G.a >> G.b >> G.c >> G.d;
+        fin >> G.nod_start >> G.nod_end >> G.simbol >> G.output;
         tr.push_back(G); // salvam in vectorul tr: starea 1, starea 2, simbolul si ce afiseaza
     }
     fin >> stare_initiala;
@@ -132,3 +132,4 @@ int main()
     fin.close();
     return 0;
 }
+
